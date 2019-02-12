@@ -6,7 +6,8 @@ services:
   - docker
 
 before_install:
-  - curl -Ls -o docker-build https://github.com/mate-desktop/mate-dev-scripts/raw/master/travis/docker-build
+  - sudo apt-get install -y python3-github
+  - curl -Ls -o docker-build https://github.com/mate-desktop/mate-dev-scripts/raw/travis/travis/docker-build
   - chmod +x docker-build
  
 install:
@@ -14,6 +15,15 @@ install:
 
 script:
   - ./docker-build --name ${DISTRO} --verbose --config .travis.yml --build autotools
+
+deploy:
+  provider: script
+  script: ./docker-build --name ${DISTRO} --verbose --config .travis.yml --release
+  skip_cleanup: true
+  on:
+    tags: true
+    #branch: master
+    condition: "$TRAVIS_TAG =~ ^v.*$ && $DISTRO == archlinux/base"
 
 env:
   - DISTRO="archlinux/base"
@@ -100,3 +110,13 @@ variables:
 
 after_scripts:
   - make distcheck
+
+releases:
+  draft: False
+  prerelease: False
+  base_version: 1.20
+  file_glob: true
+  files: mate-notification-daemon.tar*
+  web_hooks:
+    - http://pub.release-site.com
+    - http://another.release-site.com
