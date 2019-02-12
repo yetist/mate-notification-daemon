@@ -1,3 +1,9 @@
+### mate-notification-daemon 1.21.2
+
+  * 1.21.2 release
+  * Just test for docker-build
+  * The release will based on the latest release(1.21.1)
+
 ### mate-notification-daemon 1.21.1
 
   * Enable github release support
